@@ -8,7 +8,7 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk import ne_chunk, pos_tag
 import requests
 
-api = "2ed14f8f7ee54fbbb687b267e0ff026c"
+api = "enter your api key"
 
 def extract_news(name,location):
     try:
