@@ -11,7 +11,7 @@ from urllib3.exceptions import InsecureRequestWarning
 def extract_image_text(image):
     try:
         api_endpoint = 'http://api.ocr.space/parse/image'
-        api_key = 'K81321865588957'
+        api_key = 'enter your api key'
         language = 'eng'
         ocr_engine = 2
         response = requests.post(api_endpoint, 
