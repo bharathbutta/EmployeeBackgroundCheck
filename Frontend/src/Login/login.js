@@ -153,6 +153,18 @@ const Login = () => {
     }
     return result;
   };
+
+  const onChangeUsernameupdate = (e) => {
+    usernameupdate(e.target.value)
+    errorMessage("")
+  }
+
+  const onChangePasswordupdate = (e) => {
+    passwordupdate(e.target.value)
+    errorMessage("")
+  }
+
+
   return (
     <div className="container1">
       <div className="forms-container1">
@@ -166,7 +178,7 @@ const Login = () => {
               </i>
               <input
                 value={username}
-                onChange={(e) => usernameupdate(e.target.value)}
+                onChange={onChangeUsernameupdate}
                 type="text"
                 placeholder="Username"
               ></input>
@@ -177,7 +189,7 @@ const Login = () => {
               </i>
               <input
                 value={password}
-                onChange={(e) => passwordupdate(e.target.value)}
+                onChange={onChangePasswordupdate}
                 type="password"
                 placeholder="Password"
               ></input>
