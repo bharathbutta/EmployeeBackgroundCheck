@@ -27,7 +27,7 @@ def backgroundCheck():
     if data is None:
         #if employee data not present
         print("inserting into db")
-        feedback_points = 0
+        feedback_points = 25
         total_points = court_api_points + news_api_points + feedback_points
         insert_query = "INSERT INTO dbo.EmployeeData(empName, address, dob, courtapiPoints, newsapiPoints, finalPercentage, feedbackPoints) VALUES(?, ?, ?, ?, ?, ?, ?)"
         cursor.execute(insert_query, (empName, address, dob, court_api_points, news_api_points, total_points, feedback_points))
