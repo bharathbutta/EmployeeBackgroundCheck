@@ -1,11 +1,11 @@
 import pyodbc
 
 def connection():
-    server = 'userinfostorage.database.windows.net'
-    database = 'DatastoreDB'
-    username = 'Admin1'
-    password = 'Technothon@2023'
-    driver= '{ODBC Driver 17 for SQL Server}'
+    server = 'server_Name'
+    database = 'Database_Name'
+    username = 'Username'
+    password = 'password'
+    driver= 'Driver_Name'
 
     connString = 'DRIVER='+driver+';SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password
     conn = pyodbc.connect(connString)
