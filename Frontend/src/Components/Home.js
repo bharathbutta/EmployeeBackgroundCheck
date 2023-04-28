@@ -102,6 +102,7 @@ const Home = () => {
       //   "Name": "Butta Bharath"
       // }
       localStorage.setItem('empDetails', JSON.stringify(empData.data.data))
+      await courtAndNewsAPICalls(empData.data.data)
       setSelectedFrontImg('')
       setSelectedBackImg('')
       navigate("/information");
@@ -126,7 +127,7 @@ const Home = () => {
       const base64 = await convertBase64(file);
       setSelectedFrontImg(base64);
 
-
+      setErrorMsg("")
       // const file = event.target.files[0]
       // const reader = new FileReader()
 
@@ -145,7 +146,7 @@ const Home = () => {
       const file = event.target.files[0];
       const base64 = await convertBase64(file);
       setSelectedBackImg(base64);
-
+      setErrorMsg("")
 
 
 
@@ -172,7 +173,7 @@ const Home = () => {
       const base64 = await convertBase64(file);
       setSelectedPanImg(base64);
 
-
+      setErrorMsg("")
       // const file = event.target.files[0]
       // const reader = new FileReader()
 
@@ -200,9 +201,6 @@ const Home = () => {
     });
   };
 
-  const checkBoxStatus =()=>{
-    setCheckBoxValue(true)
-  }
 
   const jwtToken = Cookies.get('jwt_token')
   if (jwtToken === undefined) {
@@ -250,7 +248,7 @@ const Home = () => {
                 <input id="aadharFront" type="file" accept="image/*" onChange={backImageUploadOnChange} />
               </div>
               <div className="terms">
-              <input type="checkbox" onClick={checkBoxStatus}/><p style={{ marginLeft: "10px", color: "blue", textDecoration: "underline"}}>Accept Tearms and Conditons</p>
+              <input type="checkbox" onClick={() => setCheckBoxValue((previous) => !previous)}/><p style={{ marginLeft: "10px", color: "blue", textDecoration: "underline"}}>Accept Tearms and Conditons</p>
               </div>
               {errorMsg && <p Style='color:red'>*{errorMsg}</p>}
               { !loaderStatus   ? (<button
@@ -275,7 +273,7 @@ const Home = () => {
               <input id="aadharFront" type="file" accept="image/*" onChange={panImageUploadOnChange} />
             </div>
             <div className="terms">
-            <input type="checkbox" onClick={checkBoxStatus}/><p style={{ marginLeft: "10px", color: "blue", textDecoration: "underline"}}>Accept Tearms and Conditons</p>
+            <input type="checkbox" onClick={() => setCheckBoxValue((previous) => !previous)}/><p style={{ marginLeft: "10px", color: "blue", textDecoration: "underline"}}>Accept Tearms and Conditons</p>
             </div>
             {errorMsg && <p Style='color:red'>*{errorMsg}</p>}
             { !loaderStatus   ? (<button
