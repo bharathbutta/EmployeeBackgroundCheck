@@ -1,7 +1,7 @@
 ## Installation
 
 A.Installing Prerequisites
-Download and install at least LTS or the latest version of Node.js from its web site.
+Download and install at least LTS or the latest version of [Node.js] from its web site.
 
 B.Installing Oftadeh React
 Open your favorite console application (Terminal, Command Prompt etc.), navigate into your work folder, run the following command and wait for it to finish:
