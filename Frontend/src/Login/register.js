@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaUser, FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { AiFillMessage } from "react-icons/ai";
 import Loginimg from "../Assets/undraw_learning_sketching_nd4f.svg";
 import httpClients from "./httpClients";
 
@@ -11,12 +12,46 @@ const Register = () => {
   const [password, passwordchange] = useState("");
   const [confirmpassword, confirmpasswordchange] = useState("");
   const [email, emailchange] = useState("");
+  const[code, setOtpVerfiy] = useState("");
+  const [sucessMsg, setSucessMsg] = useState("");
   const [errorHandle, errorMessage] = useState("");
+  const [emailVerfiySucessfully, setEmailVerfiySucessfully] = useState(false);
+
+
 
   const navigate = useNavigate();
+  // const emailVerfication = async () => {
+  //   const response =  await httpClients.post("http://127.0.0.1:5002/otpverification", {
+  //                  email,
+  //               });
+  // };
+  const verifyMail=async()=>{
+    const response =  await httpClients.post("http://127.0.0.1:5002/otpverification", {
+                   email,
+                });
+      console.log('email',response)
+      if (response.data.success =='Otp sent Successfully') {
+        setSucessMsg (response.data.success)
+      }
+  }
 
-  const regUser = async (event) => {
-    event.preventDefault()
+  const onClickVerfiyOtp = async()=> {
+    const response = await httpClients.post("http://127.0.0.1:5002/verify",{
+       code,
+        })
+
+        if (response.data.sucess == "OTP verfied") {
+          errorMessage('OTP verfied')
+          setSucessMsg ('')
+          setEmailVerfiySucessfully(true)
+        
+        } else{
+          errorMessage("Invalid Verification Code")
+        }
+  }
+
+  const regUser = async () => {
+    // event.preventDefault()
 
     if (password !== confirmpassword) {
       errorMessage('Password did not match')
@@ -45,10 +80,10 @@ const Register = () => {
       //errorMsgStatus(true)
       errorMessage('Please enter username and password')
     }
-    // else if (username == '' && password == '' && email == '' && confirmpassword !== '') {
-    //   //errorMsgStatus(true)
-    //   errorMessage('Please enter confirm password')
-    // }
+    else if (username !== '' && password !== '' && email !== '' && emailVerfiySucessfully == false) {
+      //errorMsgStatus(true)
+      errorMessage('Please verfiy your email')
+    }
 
     else {
       const loginRes = await httpClients.post("http://127.0.0.1:5002/loginService/register", {
@@ -65,13 +100,28 @@ const Register = () => {
         errorMessage(loginRes.data.error)
       }
     }
+    const emailVerfication = await httpClients.post("http://127.0.0.1:5002/otpverification", {
+      email,
+    });
   };
 
+  const onChangeUserName = (e) => {
+    usernamechange(e.target.value)
+    errorMessage("")
+  }
+  const onChangeEmail = (e) => {
+    emailchange(e.target.value)
+    errorMessage("")
+  }
+  const onChangePassword = (e) => {
+    passwordchange(e.target.value)
+    errorMessage("")
+  }
 
   return (
     <div>
       <div className="container1">
-        <form className="forms-container1" onSubmit={regUser}>
+        <div className="forms-container1">
           <div className="signin-signup">
             <h1 className="title">Sign up</h1>
 
@@ -83,24 +133,41 @@ const Register = () => {
                   </i>
                   <input
                     value={username}
-                    onChange={(e) => usernamechange(e.target.value)}
+                    onChange={onChangeUserName}
                     type="text"
                     placeholder="Username"
                   ></input>
                 </div>
                 <div>
-                  <div className="input-field">
+                  <div className="input-field1">
                     <i>
                       <MdEmail />
                     </i>
                     <input
                       value={email}
-                      onChange={(e) => emailchange(e.target.value)}
+                      onChange={onChangeEmail}
                       type="email"
                       placeholder="Email"
                     ></input>
+                  <button className="verfiy-button" onClick={verifyMail}>Sent otp</button>
                   </div>
                 </div>
+
+            {  sucessMsg &&   <div>
+                  <div className="input-field1">
+                    <i>
+                      <AiFillMessage />
+                    </i>
+                    <input
+                      value={code}
+                      onChange={(e) => setOtpVerfiy(e.target.value)}
+                      type="text"
+                      placeholder="OTP Verfication"
+                    ></input>
+                  <button className="verfiy-button" onClick ={onClickVerfiyOtp}>verfiy</button>
+                  </div>
+                </div>}
+
                 <div>
                   <div className="input-field">
                     <i>
@@ -108,7 +175,7 @@ const Register = () => {
                     </i>
                     <input
                       value={password}
-                      onChange={(e) => passwordchange(e.target.value)}
+                      onChange={onChangePassword}
                       type="password"
                       placeholder="Password"
                     ></input>
@@ -181,12 +248,12 @@ const Register = () => {
             </div>
             <div>
               {errorHandle && <p Style='color:red;padding-left:14px;'>*{errorHandle}</p>}
-              <button id="btnlogin" type="submit" className="btn solid">
+              <button id="btnlogin" className="btn solid" onClick={regUser}>
                 Register
               </button>{" "}
             </div>
           </div>
-        </form>
+        </div>
         <div className="panels-container1">
           <div className="panel left-panel">
             <div className="content">
