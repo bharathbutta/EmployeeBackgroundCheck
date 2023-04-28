@@ -11,7 +11,7 @@ from urllib3.exceptions import InsecureRequestWarning
 def extract_image_text(image):
     try:
         api_endpoint = 'http://api.ocr.space/parse/image'
-        api_key = 'enter your api key'
+        api_key = 'K81321865588957'
         language = 'eng'
         ocr_engine = 2
         response = requests.post(api_endpoint, 
@@ -38,6 +38,7 @@ def extract_image_text(image):
 #for adhar
 
 def aadhar_details(ocr_text):
+
     aadhar_detals1 = []
     adhar_number_patn = '[0-9]{4}\s[0-9]{4}\s[0-9]{4}'
     match = re.search(adhar_number_patn, ocr_text)
@@ -45,51 +46,88 @@ def aadhar_details(ocr_text):
         aadhar_detals1.append(match.group())
     else:
         aadhar_detals1.append(None)
-    pattern1 = r"(?i)Government of India\s*([A-Za-z\s.'-]+)(?=\s+Ds\s|$)"
-    pattern2 = r"(?i)GOVERNMENT OF INDIA\s*([A-Za-z\s.'-]+)(?=\s+Father|$)"
-    
+
+    pattern1 = r"(?i)Government of India\s+se\s([A-Za-z\s.'-]+)(?=\s+g|$)"
+    #pattern2 = r"(?i)GOVERNMENT OF INDIA\s*([A-Za-z\s.'-]+)(?=\s+Father|$)"
+    pattern3 = r"(?i)India\s*([A-Za-z\s.'-]+)(?=\s|$)"
+    #print(ocr_text)
     # Search for the first match of the name regex in the string
     match = re.findall(pattern1, ocr_text)
-    match1 = re.findall(pattern2, ocr_text)
+    #match1 = re.search(pattern2, ocr_text)
+    match3 = re.search(pattern3, ocr_text)
     # If a match is found, print the name
     if match:
-        aadhar_detals1.append(match[0])
+         print(match)
+         aadhar_detals1.append(match[0])
+    #elif match1:
+        #aadhar_detals1.append(match1[0])
+    elif match3:
+        # print(type(match3))
+        # aadhar_detals1.append(match3.group().split(")
+         a = match3.group().split(' ')
+         b = a[1]
+         c = a[2]
+         aadhar_detals1.append(b + ' ' + c)
     else:
-        if match1:
-            aadhar_detals1.append(match1[0])
-        else:
-            aadhar_detals1.append(None)
-    dob_patn = '\d{2}+[-/]\d{2}+[-/]\d{4}+'
+        aadhar_detals1.append(None)
+
+    dob_patn = 'DOB: \d{2}+[-/]\d{2}+[-/]\d{4}+'
     #if 'DOB' in ocr_text:
     match = re.search(dob_patn, ocr_text)
     if match:
-        aadhar_detals1.append(match.group())
+        #print(match)
+        aadhar_detals1.append(match.group().split(' ')[1])
     else:
         aadhar_detals1.append(None)
+        
     GENDER = ''
-    if 'Male' in ocr_text or 'MALE' in ocr_text:
+    a = ocr_text.split(' ')
+    if 'Male' in a or 'MALE' in a or'male' in a:
         GENDER = 'Male'
-    elif 'Female' in ocr_text or 'FEMALE' in ocr_text:
+    elif 'Female' in a or 'FEMALE' in a or 'female' in a:
         GENDER = 'Female'
     else:
         GENDER = None
     aadhar_detals1.append(GENDER)
     return aadhar_detals1
 
+    # Gender = 'male|Male|female|Female|FEMALE|MALE'
+    # match = re.search(Gender, ocr_text)
+    # if match:
+    #     #print("buhbbbbbb:",match)
+
+    #     aadhar_detals1.append(match.group().lower())
+    # else:
+    #     aadhar_detals1.append(None)
+
 
 def aadhar_backDetails(ocr_text):
-    pattern1 = r'(?<=Unique ldentification Authority of India\s).*\d{6}'
-    pattern2 = r'(?<=Address:\s).*?(?=\s*help@uidai\.gov\.in)'
+    # pattern1 = r'(?<=Unique ldentification Authority of India\s).*\d{6}'
+    # pattern2 = r'(?<=Address:\s).*?(?=\s*help@uidai\.gov\.in)'
+    # pattern3 = r'(?<=SAddress:\s).*?(?={0-9}{4})'
+    #pattern3 = r"(?i)\s*([A-Za-z\s.'-]+)(?=\s|$)"
+    a = ocr_text.replace('•', '')
+    
 
-    result = re.findall(pattern1,ocr_text)
-    result1 = re.findall(pattern2,ocr_text)
-    if result:
-        data = (result[0])
+    #pattern3 = r'(?<=Address:\s).*?(?=\s+[0-9])'
+    pattern3 = r'(?<=Address:\s).*?[0-9]{6}+(?=\s)'
 
+
+    # result = re.findall(pattern1,ocr_text)
+    # result1 = re.findall(pattern2,ocr_text)
+    #result2 = re.search(pattern3,a)
+    result2 = re.findall(pattern3,a)
+    print(result2)
+    if result2:
+        data = (result2[0])
+        print(data)
         return data
+    # elif result1:
+    #     return result1[0]
+    # elif result2:
+    #     return result2[0]
     else:
-        if result1:
-            return result1[0]
+        return None
     
         
 def find_adhar_number(ocr_text):
@@ -187,5 +225,7 @@ def chech_aadhar_back_image(data):
         return True
     else:
         return False
+    
+
 def check_file_format(base64_text):
-    return 'png' in base64_text or 'jpg' in base64_text or 'jpeg' in base64_text
+    return 'png' in base64_text or 'jpg' in base64_text or 'jpeg'
