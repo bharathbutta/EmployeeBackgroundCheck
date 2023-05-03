@@ -166,13 +166,13 @@ def signup():
         # Send an email with the verification code
         msg = MIMEText("Your verification code is: " + str(code))
         msg['Subject'] = "Email Verification"
-        msg['From'] = "sampleemailforusing123@gmail.com"
+        msg['From'] = "Enter your Email"
         msg['To'] = email
         
         # Send the email using SMTP
         smtp = smtplib.SMTP('smtp.gmail.com', 587)
         smtp.starttls()
-        smtp.login('sampleemailforusing123@gmail.com', 'ksezppqjjfzcqoeh')
+        smtp.login('Enter your Email', 'Password')
         smtp.sendmail('sampleemailforusing123@gmail.com', email, msg.as_string())
         smtp.quit()
         print(code)
